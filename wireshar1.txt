@@ -1,0 +1,12 @@
+cd lab.support.files/pcaps
+
+ls -l
+
+wireshark-gtk nimda.download.pcap 
+
+HTTP nimda
+
+right click follow tcp stream
+
+file export object Http
+

@@ -1,0 +1,22 @@
+open client
+
+go to terminal
+
+sudo apt-get update
+
+sudo apt-get install rsyslog
+
+sudo nano /etc/rsyslog.conf
+
+add this line at the bottom
+
+@192.168.0.106:514
+
+*.* @@192.168.0.106:514
+
+
+sudo systemctl restart rsyslog
+
+sudo systemctl status rsyslog
+
+sudo apt-get update

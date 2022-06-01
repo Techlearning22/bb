@@ -1,0 +1,78 @@
+Part 1: Preparing the Virtual Environment
+Part 2: Firewall and IDS Logs
+Part 3: Terminate and Clear Mininet Process
+
+
+Part1:
+
+Step 1: Launch the CyberOps Workstation VM, open a terminal and type
+“sudo ./lab.support.files/scripts/configure_as_dhcp.sh” 
+
+
+Step 2: Use the ifconfig command to verify that your Internet is working and type ping command 
+
+“ping www.google.com”
+
+Part 2: Firewall and IDS Logs.
+
+Step 1 :Real-Time IDS Log Monitoring by typing this command
+“sudo ./lab.support.files/scripts/cyberops_extended_topo_no_fw.py”
+
+Step 2:  From mininet we can open the new Shell typing 
+
+xterm R1
+
+Step 3: From R1’s shell, start the Linux-based IDS, Snort.
+“./lab.support.files/scripts/start_snort.sh”
+
+Step 4: From the CyberOps Workstation VMmininet prompt, open shells for hosts H5 and H10.
+
+xterm H5
+Xterm H10
+
+Step 5: H10 will simulate a server and run malware on it.put command on Shell H10 
+“./lab.support.files/scripts/mal_server_start.sh”
+
+Step 6: On H10, use netstat with the -tunpa options to verify that the web server is running by this command 
+“netstat -tunpa”
+
+Step 7: In the R1 terminal window, an instance of Snort is running. 
+To enter more commands on R1, open another R1 terminal by entering the xterm R1 again.
+
+Step 8: In the new R1 terminal tab, run the tail command “tail -f /var/log/snort/alert” we will get nothing because we didn't record the log.
+
+From H5, use the wget command to download a file named W32.Nimda.Amm.exe. Designed to download content via HTTP, wget is a great tool for downloading files from web servers directly from the command line.
+Put command 
+“wget 209.165.202.133:6666/W32.Nimda.Amm.exe” Or use  “curl -O 209.165.202.133:6666/W32.Nimda.Amm.exe”
+
+All alerts will be shown in R1 shell like this
+
+Step 9: On H5, use the tcpdump command to capture the event anddownload the malware file again so you 	can capture the transaction.type command.
+“tcpdump –i H5-eth0 –w nimda.download.pcap&”
+
+Step 10: Press ENTER a few times to regain control of the shell while tcpdump runs in background.
+Now that tcpdump is capturing packets, download the malware again. On H5, re-run the command.
+“curl -O 209.165.202.133:6666/W32.Nimda.Amm.exe”
+
+
+Step 11: Stop the capture by bringingtcpdump to foreground with the fg command. Because tcpdump was the only process sent to the background, there is no need to specify the PID. Stop the tcpdump process with Ctrl+C.The tcpdump process stops and displays a summary of the capture. The number of packets may be different for your capture.
+“fg tcpdump -i h5-eth0 -w nimda.download.pcap”
+
+Step 12: On H5, Use the ls –l
+
+Step 13:
+Step 1: Tuning Firewall Rules Based on IDS Alerts
+ A) In the CyberOps Workstation VM, start a third R1 terminal window. 
+mininet>xterm R1 
+B) In the new R1 terminal window, use the iptables –L -v
+C) iptables -I FORWARD -p tcp -d 209.165.202.133 --dport 6666 -j DROP
+
+D) On H5, try to download the file again:
+
+
+Part 3: Terminate and Clear Mininet Process.
+
+A) Navigate to the terminal used to start Mininet. Terminate the Mininet by entering quit in the main CyberOps VM terminal window.
+
+ 
+B) After quitting Mininet, clean up the processes started by Mininet. Enter the password cyberops when prompted.  “sudo mn –c”

@@ -1,0 +1,45 @@
+open server
+
+go to terminal
+
+sudo apt-get update
+
+sudo apt-get install rsyslog
+
+sudo nano /etc/rsyslog.conf
+
+
+uncomment module and input lines
+TCP and UDP lines.
+global dir
+$template remote-incoming-log,"/var/log/%HOSTNAME%/%PROGRAMNAME%.log"
+*.* ?remote-incoming-log
+
+sudo systemctl restart rsyslog
+
+sudo systemctl status rsyslog
+
+ss -tunelp | grep 514 (conformation wheteher port is listening or not)
+
+sudo apt-get install ufw
+
+sudo ufw allow 514/udp(enable firewall)
+sudo ufw allow 514/tcp
+
+sudo rsyslogd -N1 -f /etc/rsyslog.conf(conformation for rsyslog configuration)
+
+cd /var/log
+ls
+cd kali
+sudo rm *
+cd ../
+sudo rmdir kali
+
+go to settings change network to bridgeadapter
+
+then check ifconfig
+
+cd kali
+
+ls
+rsyslogd.log
